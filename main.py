@@ -1,6 +1,8 @@
 # coding: utf-8
 from argparse import ArgumentParser
-import httpConnector
+from httpConnector import HTTPConnector
+import urllib
+
 
 def initArgs():
     parser = ArgumentParser(description="It is a program for running php-tests by using http-queries.")
@@ -10,4 +12,19 @@ def initArgs():
 
 if __name__ == "__main__":
     args = initArgs()
-    print(args)
+    
+    data = urllib.parse.urlencode({
+        "title" : "qwerty",
+        "jquery" : "on",
+        "description" : "description",
+        "send" : "on",
+    })
+
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}    
+    
+    try:
+        cn = HTTPConnector(args.URL, data, headers)
+        
+    except Exception as e:
+        print(type(e))
+        print(e)
