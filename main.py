@@ -1,6 +1,6 @@
 # coding: utf-8
 from argparse import ArgumentParser
-from httpConnector import HTTPConnector
+from http.client import HTTPConnection
 import urllib
 
 
@@ -11,19 +11,31 @@ def initArgs():
     return parser.parse_args()
 
 if __name__ == "__main__":
-    args = initArgs()
+    #args = initArgs()
+    url = 'localhost'
+    subUrl = '/test/'
     
     data = urllib.parse.urlencode({
-        "title" : "qwerty",
-        "jquery" : "on",
-        "description" : "description",
+        "name" : "TextProcessorTest.php",
         "send" : "on",
     })
 
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}    
     
     try:
-        cn = HTTPConnector(args.URL, data, headers)
+        connection = HTTPConnection(url)
+        connection.request("POST", subUrl, data, headers)
+        response = connection.getresponse()
+
+        data = response.read()
+        status = response.status
+        reason = response.reason
+        data = data.decode("utf-8")
+
+        connection.close()
+        print("Status=",status)
+        print("Reason=", reason)
+        print(data)
         
     except Exception as e:
         print(type(e))
