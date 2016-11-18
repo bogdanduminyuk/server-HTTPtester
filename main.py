@@ -46,8 +46,9 @@ if __name__ == "__main__":
         print(data)"""
 
         conn = Connector(url, subUrl)
-        res = conn.test_request(data)
-        print(res.get('Data'))
+        #res = conn.test_request(data)
+        res = conn.get_test_list()
+        print(res)
 
         
     except Exception as e:
