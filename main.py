@@ -15,7 +15,7 @@ def init_args():
 if __name__ == "__main__":
     # args = init_args()
     url = 'localhost'
-    subUrl = '/test/'
+    subUrl = '/lib/test/'
     testName = "TextProcessorTest.php"
     
     data = parse.urlencode({
@@ -26,6 +26,25 @@ if __name__ == "__main__":
     data = {
         "name" : testName,
         "send" : "on",
+        "test_data":
+            '''{"testIsUrl": {
+                "http://google.ru": 1,
+                "https:///cSAdASCZXCV1qwerty": 0,
+                "https://www.yandex.ru": 1,
+                "htp://qwerty.loc": 1
+            },
+
+            "testTranslit": {
+                "привет": "privet",
+                "пока": "poka",
+                "Маша": "Masha"
+            },
+
+            "testRemovingSpaceSymbols": {
+
+            }
+        }'''
+
     }
 
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}    
@@ -46,9 +65,9 @@ if __name__ == "__main__":
         print(data)"""
 
         conn = Connector(url, subUrl)
-        #res = conn.test_request(data)
-        res = conn.get_test_list()
-        print(res)
+        res = conn.test_request(data)
+        # res = conn.get_test_list()
+        print(res.get("Data"))
 
         
     except Exception as e:
