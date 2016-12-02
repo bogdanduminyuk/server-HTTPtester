@@ -1,10 +1,1 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from mainform_ui import Ui_MainWindow
-
-app = QApplication(sys.argv)
-window = QMainWindow()
-ui = Ui_MainWindow()
-ui.setupUi(window)
-window.show()
-sys.exit(app.exec_())
+# coding: utf-8

@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -115,10 +116,12 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_help.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.listWidget.setCurrentRow(-1)
+        self.listWidget.setCurrentRow(1)
         self.btn_test.clicked.connect(self.act_test.trigger)
         self.btn_refresh.clicked.connect(self.act_refresh.trigger)
         self.act_exit.triggered.connect(MainWindow.close)
+        self.act_open.triggered.connect(self.open_file)
+        self.act_refresh.triggered.connect(self.refresh_list)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -150,3 +153,11 @@ class Ui_MainWindow(object):
         self.act_test.setText(_translate("MainWindow", "Тестировать"))
         self.act_test.setShortcut(_translate("MainWindow", "Return"))
 
+    def open_file(self):
+        dlg = QFileDialog()
+        if dlg.exec_():
+            self.filename = dlg.selectedFiles()
+            print(self.filename)
+
+    def refresh_list(self):
+        self.listWidget.addItem("qwerty")
