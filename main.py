@@ -4,6 +4,9 @@ from PyQt5 import *
 
 from Connector import *
 
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+
 
 def init_args():
     parser = ArgumentParser(description="It is a program for running php-tests by using http-queries.")
@@ -52,26 +55,21 @@ if __name__ == "__main__":
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}    
     
     try:
-        """connection = HTTPConnection(url)
-        connection.request("POST", subUrl, data, headers)
-        response = connection.getresponse()
-
-        data = response.read()
-        status = response.status
-        reason = response.reason
-        data = data.decode("utf-8")
-
-        connection.close()
-        print("Status=",status)
-        print("Reason=", reason)
-        print(data)"""
-
-        conn = Connector(url, subUrl)
+        """conn = Connector(url, subUrl)
         res = conn.test_request(data)
         # res = conn.get_test_list()
-        print(res.get("Data"))
+        print(res.get("Data"))"""
 
-        
+        app = QApplication(sys.argv)
+
+        w = QWidget()
+        w.resize(250, 150)
+        w.move(300, 300)
+        w.setWindowTitle('Дарова')
+        w.show()
+
+        sys.exit(app.exec_())
+
     except Exception as e:
         print(type(e))
         print(e)
