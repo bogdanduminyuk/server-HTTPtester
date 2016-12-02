@@ -1,7 +1,6 @@
 # coding: utf-8
 from argparse import ArgumentParser
-from http.client import HTTPConnection
-from urllib import parse
+from PyQt5 import *
 
 from Connector import *
 
@@ -44,6 +43,9 @@ if __name__ == "__main__":
 
             }
         }'''
+        
+        # форма для создания тестового файла (или динамических тестовых данных)
+        # 
 
     }
 
