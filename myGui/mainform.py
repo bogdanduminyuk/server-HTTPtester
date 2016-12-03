@@ -7,8 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 import webbrowser
+from myGui.about import Ui_Dialog
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QDialog
 
 
 class Ui_MainWindow(object):
@@ -244,6 +245,10 @@ class Ui_MainWindow(object):
     # """""""""""""""""""""
     def about(self):
         about_window = uic.loadUi("./myGui/ui/about.ui")
+        """about_window = QDialog()
+        ui = Ui_Dialog()
+        ui.setupUi(about_window)"""
+
         about_window.setModal(True)
         about_window.exec()
 
