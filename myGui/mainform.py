@@ -244,10 +244,9 @@ class Ui_MainWindow(object):
     # Help-menu handlers
     # """""""""""""""""""""
     def about(self):
-        about_window = uic.loadUi("./myGui/ui/about.ui")
-        """about_window = QDialog()
+        about_window = QDialog()
         ui = Ui_Dialog()
-        ui.setupUi(about_window)"""
+        ui.setupUi(about_window)
 
         about_window.setModal(True)
         about_window.exec()
