@@ -7,9 +7,13 @@
 # WARNING! All changes made in this file will be lost!
 
 import webbrowser
-from myGui.about import Ui_Dialog
+import json
+from os.path import basename
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QDialog
+
+from myGui import about
+from myGui import settings
 
 
 class Ui_MainWindow(object):
@@ -197,8 +201,15 @@ class Ui_MainWindow(object):
 
             self.statusbar.showMessage("Открыт файл: " + filename)
             self.textEdit.setReadOnly(False)
+            self.label_current_file.setText(basename(filename))
 
     def save_file(self):
+        try:
+            json.loads(self.textEdit.toPlainText())
+        except ValueError as e:
+            self.statusbar.showMessage("Json не прошел валидацию: " + str(e))
+            return None
+
         filename, _ = QFileDialog.getSaveFileName(None, "Сохранить как", "", "JSON-файлы (*.json)")
 
         if filename != "":
@@ -208,6 +219,7 @@ class Ui_MainWindow(object):
                 file.write(data)
 
             self.statusbar.showMessage("Успешное сохранение файла: " + filename)
+            self.label_current_file.setText(basename(filename))
 
     def close(self):
         if self.textEdit.isReadOnly():
@@ -238,18 +250,27 @@ class Ui_MainWindow(object):
     # Options-menu handlers
     # """""""""""""""""""""
     def settings(self):
-        self.statusbar.showMessage("Настрокки...")
+        self.statusbar.showMessage('Вызвано диалоговое окно "Настройки"')
+        settings_window = QDialog()
+        ui = settings.Ui_Dialog()
+        ui.setupUi(settings_window)
+
+        settings_window.setModal(True)
+        settings_window.exec()
+        self.statusbar.showMessage('')
 
     # """""""""""""""""""""
     # Help-menu handlers
     # """""""""""""""""""""
     def about(self):
+        self.statusbar.showMessage('Вызвано диалоговое окно "О программе"')
         about_window = QDialog()
-        ui = Ui_Dialog()
+        ui = about.Ui_Dialog()
         ui.setupUi(about_window)
 
         about_window.setModal(True)
         about_window.exec()
+        self.statusbar.showMessage('')
 
     def show_help(self):
         webbrowser.open("http://localhost/view/pages/help_common.php")
