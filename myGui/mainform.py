@@ -6,8 +6,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+import webbrowser
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 
 class Ui_MainWindow(object):
@@ -41,6 +42,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.textEdit = QtWidgets.QTextEdit(self.layoutWidget)
         self.textEdit.setObjectName("textEdit")
+        self.textEdit.setPlaceholderText("Откройте файл или создайте новый...")
+        self.textEdit.setReadOnly(True)
         self.verticalLayout_2.addWidget(self.textEdit)
         self.layoutWidget1 = QtWidgets.QWidget(self.centralwidget)
         self.layoutWidget1.setGeometry(QtCore.QRect(10, 10, 161, 321))
@@ -129,11 +132,18 @@ class Ui_MainWindow(object):
         self.btn_refresh.clicked.connect(self.act_refresh.trigger)
         self.act_exit.triggered.connect(MainWindow.close)
 
+        self.act_new.triggered.connect(self.new_file)
         self.act_open.triggered.connect(self.open_file)
-        self.act_refresh.triggered.connect(self.refresh_list)
         self.act_save.triggered.connect(self.save_file)
-        self.act_help.triggered.connect(self.show_help)
         self.act_close.triggered.connect(self.close)
+
+        self.act_test.triggered.connect(self.test)
+        self.act_refresh.triggered.connect(self.refresh_list)
+
+        self.act_settings.triggered.connect(self.settings)
+
+        self.act_about.triggered.connect(self.about)
+        self.act_help.triggered.connect(self.show_help)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -168,6 +178,14 @@ class Ui_MainWindow(object):
         self.act_close.setText(_translate("MainWindow", "Закрыть текущий файл"))
         self.act_close.setShortcut(_translate("MainWindow", "Ctrl+Q"))
 
+    # """"""""""""""""""
+    # File-menu handlers
+    # """"""""""""""""""
+    def new_file(self):
+        self.label_current_file.setText("Untitled.json")
+        self.textEdit.setReadOnly(False)
+        self.textEdit.setPlaceholderText("Заполните тестовые данные...")
+        self.statusbar.showMessage("Создан новый файл")
 
     def open_file(self):
         filename, _ = QFileDialog.getOpenFileName(None, "Открыть файл", "", "JSON-файлы (*.json)")
@@ -177,7 +195,7 @@ class Ui_MainWindow(object):
             self.textEdit.setText(data)
 
             self.statusbar.showMessage("Открыт файл: " + filename)
-
+            self.textEdit.setReadOnly(False)
 
     def save_file(self):
         filename, _ = QFileDialog.getSaveFileName(None, "Сохранить как", "", "JSON-файлы (*.json)")
@@ -190,16 +208,45 @@ class Ui_MainWindow(object):
 
             self.statusbar.showMessage("Успешное сохранение файла: " + filename)
 
+    def close(self):
+        if self.textEdit.isReadOnly():
+            return
 
-    def show_help(self):
-        import webbrowser
-        webbrowser.open("http://localhost/view/pages/help_common.php")
+        title = 'Закрыть текущий файл?'
+        message = 'Вы действительно хотите закрыть текущий файл? Все несохраненные изменения будут потеряны.'
+        reply = QMessageBox.question(None, title, message, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
+        if reply == QMessageBox.Yes:
+            self.textEdit.setPlainText("")
+            self.textEdit.setReadOnly(True)
+            self.textEdit.setPlaceholderText("Откройте файл или создайте новый...")
+            self.label_current_file.setText("")
+            self.statusbar.showMessage("Файл был закрыт успешно.")
 
+    # """""""""""""""""""""
+    # Actions-menu handlers
+    # """""""""""""""""""""
     def refresh_list(self):
         self.listWidget.addItem("qwerty")
+        self.statusbar.showMessage("Список доступных тестов был обновлен.")
 
+    def test(self):
+        self.statusbar.showMessage("Тестирование...")
 
-    def close(self):
-        self.textEdit.setPlainText("")
-        self.textEdit.setReadOnly(True)
+    # """""""""""""""""""""
+    # Options-menu handlers
+    # """""""""""""""""""""
+    def settings(self):
+        self.statusbar.showMessage("Настрокки...")
+
+    # """""""""""""""""""""
+    # Help-menu handlers
+    # """""""""""""""""""""
+    def about(self):
+        about_window = uic.loadUi("./myGui/ui/about.ui")
+        about_window.setModal(True)
+        about_window.exec()
+
+    def show_help(self):
+        webbrowser.open("http://localhost/view/pages/help_common.php")
+
