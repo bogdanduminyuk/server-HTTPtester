@@ -6,14 +6,13 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import webbrowser
-import json
+import webbrowser, json
 from os.path import basename
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QDialog
 
-from myGui import about
-from myGui import settings
+from myGui import config
+from myGui import about, settings
 
 
 class Ui_MainWindow(object):
@@ -252,12 +251,16 @@ class Ui_MainWindow(object):
     def settings(self):
         self.statusbar.showMessage('Вызвано диалоговое окно "Настройки"')
         settings_window = QDialog()
-        ui = settings.Ui_Dialog()
+        ui = settings.Ui_Dialog(config)
         ui.setupUi(settings_window)
 
         settings_window.setModal(True)
-        settings_window.exec()
-        self.statusbar.showMessage('')
+
+        if settings_window.exec_():
+            config["DEFAULT"]["url"] = ui.line_URL.text()
+            config["DEFAULT"]["suburl"] = ui.line_subUrl.text()
+
+            self.statusbar.showMessage('Настройки обновлены')
 
     # """""""""""""""""""""
     # Help-menu handlers
@@ -275,3 +278,6 @@ class Ui_MainWindow(object):
     def show_help(self):
         webbrowser.open("http://localhost/view/pages/help_common.php")
 
+    def __del__(self):
+        with open("config.ini", "w") as cfg_file:
+            config.write(cfg_file)

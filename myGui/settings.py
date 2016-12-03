@@ -8,10 +8,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_Dialog(object):
-    def __init__(self):
+    def __init__(self, config):
         # TODO: написать функцию подгрузки настроек из файла
-        pass
+        self.url = config["DEFAULT"]["url"]
+        self.subUrl = config["DEFAULT"]["suburl"]
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -63,4 +65,5 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Настройки"))
         self.label.setText(_translate("Dialog", "URL HTTP-запроса:"))
         self.label_2.setText(_translate("Dialog", "Директория внутри URL:"))
-
+        self.line_URL.setText(_translate("Dialog", self.url))
+        self.line_subUrl.setText(_translate("Dialog", self.subUrl))

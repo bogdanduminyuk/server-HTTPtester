@@ -14,8 +14,6 @@ if __name__ == "__main__":
         "name" : testName,
         "send" : "on",
     })
-
-    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}    
     
     try:
         """conn = Connector(url, subUrl)
