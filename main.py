@@ -6,13 +6,13 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from myGui.mainform import Ui_MainWindow
 
 if __name__ == "__main__":
-    url = 'localhost'
-    subUrl = '/lib/test/'
+    """url = 'localhost'
+    subUrl = '/lib/test/'"""
     testName = "TextProcessorTest.php"
     
     data = parse.urlencode({
-        "name" : testName,
-        "send" : "on",
+        "name": testName,
+        "send": "on",
     })
     
     try:
@@ -23,9 +23,11 @@ if __name__ == "__main__":
 
         app = QApplication(sys.argv)
         window = QMainWindow()
+
         ui = Ui_MainWindow()
         ui.setupUi(window)
         window.show()
+
         sys.exit(app.exec_())
 
     except Exception as e:
