@@ -3,7 +3,7 @@
 import sys
 from Connector import *
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from myGui.mainform_ui import Ui_MainWindow
+from myGui.mainform import Ui_MainWindow
 
 if __name__ == "__main__":
     url = 'localhost'
@@ -14,33 +14,6 @@ if __name__ == "__main__":
         "name" : testName,
         "send" : "on",
     })
-
-    data = {
-        "name" : testName,
-        "send" : "on",
-        "test_data":
-            '''{"testIsUrl": {
-                "http://google.ru": 1,
-                "https:///cSAdASCZXCV1qwerty": 0,
-                "https://www.yandex.ru": 1,
-                "htp://qwerty.loc": 1
-            },
-
-            "testTranslit": {
-                "привет": "privet",
-                "пока": "poka",
-                "Маша": "Masha"
-            },
-
-            "testRemovingSpaceSymbols": {
-
-            }
-        }'''
-        
-        # форма для создания тестового файла (или динамических тестовых данных)
-        # 
-
-    }
 
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}    
     

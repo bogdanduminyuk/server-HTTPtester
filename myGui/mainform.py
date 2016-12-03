@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainform.ui'
+# Form implementation generated from reading ui file 'ui/mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.7
 #
@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -20,47 +21,51 @@ class Ui_MainWindow(object):
         self.btn_test = QtWidgets.QPushButton(self.centralwidget)
         self.btn_test.setGeometry(QtCore.QRect(30, 460, 131, 41))
         self.btn_test.setObjectName("btn_test")
-        self.widget = QtWidgets.QWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(190, 10, 391, 491))
-        self.widget.setObjectName("widget")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget)
+        self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
+        self.layoutWidget.setGeometry(QtCore.QRect(190, 10, 391, 491))
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_2 = QtWidgets.QLabel(self.widget)
+        self.label_2 = QtWidgets.QLabel(self.layoutWidget)
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_2.addWidget(self.label_2)
+        self.label_current_file = QtWidgets.QLabel(self.layoutWidget)
+        self.label_current_file.setText("")
+        self.label_current_file.setObjectName("label_current_file")
+        self.horizontalLayout_2.addWidget(self.label_current_file)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-        self.textEdit = QtWidgets.QTextEdit(self.widget)
+        self.textEdit = QtWidgets.QTextEdit(self.layoutWidget)
         self.textEdit.setObjectName("textEdit")
         self.verticalLayout_2.addWidget(self.textEdit)
-        self.widget1 = QtWidgets.QWidget(self.centralwidget)
-        self.widget1.setGeometry(QtCore.QRect(10, 10, 161, 321))
-        self.widget1.setObjectName("widget1")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget1)
+        self.layoutWidget1 = QtWidgets.QWidget(self.centralwidget)
+        self.layoutWidget1.setGeometry(QtCore.QRect(10, 10, 161, 321))
+        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.layoutWidget1)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label = QtWidgets.QLabel(self.widget1)
+        self.label = QtWidgets.QLabel(self.layoutWidget1)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.listWidget = QtWidgets.QListWidget(self.widget1)
+        self.listWidget = QtWidgets.QListWidget(self.layoutWidget1)
         self.listWidget.setModelColumn(0)
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout.addWidget(self.listWidget)
         self.verticalLayout_3.addLayout(self.verticalLayout)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.btn_refresh = QtWidgets.QPushButton(self.widget1)
+        self.btn_refresh = QtWidgets.QPushButton(self.layoutWidget1)
         self.btn_refresh.setObjectName("btn_refresh")
         self.horizontalLayout_3.addWidget(self.btn_refresh)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -100,9 +105,12 @@ class Ui_MainWindow(object):
         self.act_refresh.setObjectName("act_refresh")
         self.act_test = QtWidgets.QAction(MainWindow)
         self.act_test.setObjectName("act_test")
+        self.act_close = QtWidgets.QAction(MainWindow)
+        self.act_close.setObjectName("act_close")
         self.menu_file.addAction(self.act_new)
         self.menu_file.addAction(self.act_open)
         self.menu_file.addAction(self.act_save)
+        self.menu_file.addAction(self.act_close)
         self.menu_file.addSeparator()
         self.menu_file.addAction(self.act_exit)
         self.menu_options.addAction(self.act_settings)
@@ -116,12 +124,17 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_help.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.listWidget.setCurrentRow(1)
+        self.listWidget.setCurrentRow(-1)
         self.btn_test.clicked.connect(self.act_test.trigger)
         self.btn_refresh.clicked.connect(self.act_refresh.trigger)
         self.act_exit.triggered.connect(MainWindow.close)
+
         self.act_open.triggered.connect(self.open_file)
         self.act_refresh.triggered.connect(self.refresh_list)
+        self.act_save.triggered.connect(self.save_file)
+        self.act_help.triggered.connect(self.show_help)
+        self.act_close.triggered.connect(self.close)
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -139,7 +152,7 @@ class Ui_MainWindow(object):
         self.act_open.setShortcut(_translate("MainWindow", "Ctrl+O"))
         self.act_new.setText(_translate("MainWindow", "Новый"))
         self.act_new.setShortcut(_translate("MainWindow", "Ctrl+N"))
-        self.act_save.setText(_translate("MainWindow", "Сохранить"))
+        self.act_save.setText(_translate("MainWindow", "Сохранить как..."))
         self.act_save.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.act_settings.setText(_translate("MainWindow", "Настройки"))
         self.act_settings.setShortcut(_translate("MainWindow", "Ctrl+P"))
@@ -152,12 +165,41 @@ class Ui_MainWindow(object):
         self.act_refresh.setShortcut(_translate("MainWindow", "Ctrl+R"))
         self.act_test.setText(_translate("MainWindow", "Тестировать"))
         self.act_test.setShortcut(_translate("MainWindow", "Return"))
+        self.act_close.setText(_translate("MainWindow", "Закрыть текущий файл"))
+        self.act_close.setShortcut(_translate("MainWindow", "Ctrl+Q"))
+
 
     def open_file(self):
-        dlg = QFileDialog()
-        if dlg.exec_():
-            self.filename = dlg.selectedFiles()
-            print(self.filename)
+        filename, _ = QFileDialog.getOpenFileName(None, "Открыть файл", "", "JSON-файлы (*.json)")
+        if filename != "":
+            with open(filename, 'r', encoding='utf-8') as file:
+                data = file.read()
+            self.textEdit.setText(data)
+
+            self.statusbar.showMessage("Открыт файл: " + filename)
+
+
+    def save_file(self):
+        filename, _ = QFileDialog.getSaveFileName(None, "Сохранить как", "", "JSON-файлы (*.json)")
+
+        if filename != "":
+            data = self.textEdit.toPlainText()
+
+            with open(filename, "w", encoding='utf-8') as file:
+                file.write(data)
+
+            self.statusbar.showMessage("Успешное сохранение файла: " + filename)
+
+
+    def show_help(self):
+        import webbrowser
+        webbrowser.open("http://localhost/view/pages/help_common.php")
+
 
     def refresh_list(self):
         self.listWidget.addItem("qwerty")
+
+
+    def close(self):
+        self.textEdit.setPlainText("")
+        self.textEdit.setReadOnly(True)

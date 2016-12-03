@@ -1,0 +1,17 @@
+{
+   "testIsUrl": {
+    "http://google.ru": 1,
+    "https:///cSAdASCZXCV1qwerty": 0,
+    "https://www.yandex.ru": 1,
+    "htp://qwerty.loc": 1
+  },
+
+  "testTranslit": {
+    "привет": "privet",
+    "пока": "poka",
+    "Маша": "Masha"
+  },
+
+  "testRemovingSpaceSymbols": {
+  }
+}
