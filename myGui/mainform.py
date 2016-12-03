@@ -257,10 +257,19 @@ class Ui_MainWindow(object):
         settings_window.setModal(True)
 
         if settings_window.exec_():
-            config["DEFAULT"]["url"] = ui.line_URL.text()
-            config["DEFAULT"]["suburl"] = ui.line_subUrl.text()
+            url = ui.line_URL.text()
+            sub_url = ui.line_subUrl.text()
 
-            self.statusbar.showMessage('Настройки обновлены')
+            if config["DEFAULT"]["url"] != url or config["DEFAULT"]["suburl"] != sub_url:
+                config["DEFAULT"]["url"] = url
+                config["DEFAULT"]["suburl"] = sub_url
+
+                with open("config.ini", "w") as cfg_file:
+                    config.write(cfg_file)
+
+                self.statusbar.showMessage('Настройки обновлены')
+        else:
+            self.statusbar.showMessage('')
 
     # """""""""""""""""""""
     # Help-menu handlers
@@ -277,7 +286,3 @@ class Ui_MainWindow(object):
 
     def show_help(self):
         webbrowser.open("http://localhost/view/pages/help_common.php")
-
-    def __del__(self):
-        with open("config.ini", "w") as cfg_file:
-            config.write(cfg_file)
