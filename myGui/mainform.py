@@ -11,6 +11,9 @@ from Connector import *
 
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.filename = ""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1000, 568)
@@ -233,6 +236,7 @@ class Ui_MainWindow(object):
         self.textEdit.setReadOnly(False)
         self.textEdit.setPlaceholderText("Заполните тестовые данные...")
         self.statusbar.showMessage("Создан новый файл")
+        self.filename = "./Untitled.json"
 
     def open_file(self):
         filename, _ = QFileDialog.getOpenFileName(None, "Открыть файл", "", "JSON-файлы (*.json)")
@@ -240,13 +244,20 @@ class Ui_MainWindow(object):
             with open(filename, 'r', encoding='utf-8') as file:
                 data = file.read()
             self.textEdit.setText(data)
+            self.filename = filename
 
             self.statusbar.showMessage("Открыт файл: " + filename)
             self.textEdit.setReadOnly(False)
             self.label_current_file.setText(basename(filename))
 
     def save_file(self):
-        pass
+        if self.filename != "":
+            if self.__validate_json__():
+                with open(self.filename, "w", encoding='utf-8') as file:
+                    file.write(self.textEdit.toPlainText())
+                self.statusbar.showMessage("Файл успешно сохранен.")
+            else:
+                self.statusbar.showMessage("ER+! JSON не прошел валидацию.")
 
     def save_file_as(self):
         if self.__validate_json__():
@@ -295,42 +306,45 @@ class Ui_MainWindow(object):
     def test(self):
         if self.label_current_file.text() == "":
             self.statusbar.showMessage("ER+! Откройте файл, прежде чем тестировать")
+
+        elif self.textEdit.toPlainText() == "":
+            self.statusbar.showMessage("ER+! Окно данных пусто!")
+
+        elif not self.__validate_json__():
+            self.statusbar.showMessage("ER+! JSON не прошел валидацию...")
+
+        elif self.listWidget.currentRow() == -1:
+            self.statusbar.showMessage("ER+! Не выбран тест из списка")
+
         else:
-            if self.textEdit.toPlainText() == "":
-                self.statusbar.showMessage("ER+! Окно данных пусто!")
-            else:
-                if self.__validate_json__():
-                    self.statusbar.showMessage("Тестирование...")
-                    if self.listWidget.currentRow() == -1:
-                        self.statusbar.showMessage("ER+! Не выбран тест из списка")
-                    else:
-                        test_name = self.listWidget.currentItem().text()
-                        data = {
-                            "name": test_name,
-                            "send": "on",
-                            "test_data": self.textEdit.toPlainText(),
-                            "python": "true"
-                        }
+            self.statusbar.showMessage("Тестирование...")
+            test_name = self.listWidget.currentItem().text()
+            data = {
+                "name": test_name,
+                "send": "on",
+                "test_data": self.textEdit.toPlainText(),
+                "python": "true"
+            }
 
-                        result = "-------------------------------\n"
-                        result += "Создание соединения.\n"
-                        try:
-                            connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
-                            result += "Соединение создано успешно.\n"
+            result = "-------------------------------\n"
+            result += "Создание соединения.\n"
+            try:
+                connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
+                result += "Соединение создано успешно.\n"
 
-                            result += "Выполняется запрос к серверу. Ожидание ответа сервера.\n\n"
-                            request = connector.test_request(data)
+                result += "Выполняется запрос к серверу. Ожидание ответа сервера.\n\n"
+                request = connector.test_request(data)
 
-                            result += "Ответ сервера получен:\n"
-                            result += "Reason: \"" + request.get("Reason") + "\". Status: " + str(request.get("Status")) + "\n"
-                            result += "Data:\n" + request.get("Data")
-                        except Exception as e:
-                            result += "Произошла непредвиденная ошибка."
+                result += "Ответ сервера получен:\n"
+                result += "Reason: \"" + request.get("Reason") + "\". Status: " + str(request.get("Status")) + "\n"
+                result += "Data:\n" + request.get("Data")
 
-                        self.text_console.appendPlainText(result)
-                        self.statusbar.showMessage("Подключение к серверу завершено!")
-                else:
-                    self.statusbar.showMessage("ER+! JSON не прошел валидацию...")
+            except Exception as e:
+                result += "Произошла непредвиденная ошибка."
+
+                self.text_console.appendPlainText(result)
+                self.statusbar.showMessage("Подключение к серверу завершено!")
+
 
 
     # """""""""""""""""""""
