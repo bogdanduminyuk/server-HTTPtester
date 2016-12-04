@@ -1,5 +1,2 @@
-# ignore project file
-.spyderproject
-
 #ignore cache folder
 *__pycache__
