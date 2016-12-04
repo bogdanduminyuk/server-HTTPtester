@@ -19,9 +19,10 @@ from Connector import *
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(600, 568)
-        MainWindow.setMinimumSize(QtCore.QSize(600, 568))
-        MainWindow.setMaximumSize(QtCore.QSize(600, 568))
+        MainWindow.resize(1000, 568)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 568))
+        MainWindow.setMaximumSize(QtCore.QSize(1000, 568))
+        MainWindow.setWindowOpacity(1.0)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.btn_test = QtWidgets.QPushButton(self.centralwidget)
@@ -46,6 +47,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.textEdit = QtWidgets.QTextEdit(self.layoutWidget)
+        self.textEdit.setMaximumSize(QtCore.QSize(800, 600))
+        font = QtGui.QFont()
+        font.setFamily("Courier New")
+        font.setPointSize(10)
+        self.textEdit.setFont(font)
         self.textEdit.setObjectName("textEdit")
         self.textEdit.setPlaceholderText("Откройте файл или создайте новый...")
         self.textEdit.setReadOnly(True)
@@ -79,9 +85,27 @@ class Ui_MainWindow(object):
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem2)
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
+        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(600, 10, 391, 491))
+        self.widget.setObjectName("widget")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.label_3 = QtWidgets.QLabel(self.widget)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout_4.addWidget(self.label_3)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_4.addItem(spacerItem3)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_4)
+        self.text_console = QtWidgets.QPlainTextEdit(self.widget)
+        self.text_console.setReadOnly(True)
+        self.text_console.setObjectName("text_console")
+        self.verticalLayout_4.addWidget(self.text_console)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 600, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
         self.menubar.setObjectName("menubar")
         self.menu_file = QtWidgets.QMenu(self.menubar)
         self.menu_file.setObjectName("menu_file")
@@ -115,8 +139,11 @@ class Ui_MainWindow(object):
         self.act_test.setObjectName("act_test")
         self.act_close = QtWidgets.QAction(MainWindow)
         self.act_close.setObjectName("act_close")
+        self.act_just_save = QtWidgets.QAction(MainWindow)
+        self.act_just_save.setObjectName("act_just_save")
         self.menu_file.addAction(self.act_new)
         self.menu_file.addAction(self.act_open)
+        self.menu_file.addAction(self.act_just_save)
         self.menu_file.addAction(self.act_save)
         self.menu_file.addAction(self.act_close)
         self.menu_file.addSeparator()
@@ -139,7 +166,8 @@ class Ui_MainWindow(object):
 
         self.act_new.triggered.connect(self.new_file)
         self.act_open.triggered.connect(self.open_file)
-        self.act_save.triggered.connect(self.save_file)
+        self.act_save.triggered.connect(self.save_file_as)
+        self.act_just_save.triggered.connect(self.save_file)
         self.act_close.triggered.connect(self.close)
 
         self.act_test.triggered.connect(self.test)
@@ -150,15 +178,18 @@ class Ui_MainWindow(object):
         self.act_about.triggered.connect(self.about)
         self.act_help.triggered.connect(self.show_help)
 
+        self.__set_font__(config["FONT"]["value"])
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Тестирование"))
         self.btn_test.setText(_translate("MainWindow", "Тестировать"))
         self.label_2.setText(_translate("MainWindow", "Тестовые данные:"))
         self.label.setText(_translate("MainWindow", "Список тестов:"))
         self.btn_refresh.setText(_translate("MainWindow", "Обновить"))
+        self.label_3.setText(_translate("MainWindow", "Консоль:"))
         self.menu_file.setTitle(_translate("MainWindow", "Файл"))
         self.menu_options.setTitle(_translate("MainWindow", "Опции"))
         self.menu_help.setTitle(_translate("MainWindow", "Справка"))
@@ -168,7 +199,7 @@ class Ui_MainWindow(object):
         self.act_new.setText(_translate("MainWindow", "Новый"))
         self.act_new.setShortcut(_translate("MainWindow", "Ctrl+N"))
         self.act_save.setText(_translate("MainWindow", "Сохранить как..."))
-        self.act_save.setShortcut(_translate("MainWindow", "Ctrl+S"))
+        self.act_save.setShortcut(_translate("MainWindow", "Ctrl+Shift+S"))
         self.act_settings.setText(_translate("MainWindow", "Настройки"))
         self.act_settings.setShortcut(_translate("MainWindow", "Ctrl+P"))
         self.act_exit.setText(_translate("MainWindow", "Выход"))
@@ -182,6 +213,23 @@ class Ui_MainWindow(object):
         self.act_test.setShortcut(_translate("MainWindow", "Return"))
         self.act_close.setText(_translate("MainWindow", "Закрыть текущий файл"))
         self.act_close.setShortcut(_translate("MainWindow", "Ctrl+Q"))
+        self.act_just_save.setText(_translate("MainWindow", "Сохранить"))
+        self.act_just_save.setShortcut(_translate("MainWindow", "Ctrl+S"))
+
+    def __set_font__(self, font_string):
+        font = QtGui.QFont()
+        font.fromString(font_string)
+        self.textEdit.setFont(font)
+        self.text_console.setFont(font)
+
+    def __validate_json__(self):
+        try:
+            json.loads(self.textEdit.toPlainText())
+        except ValueError as e:
+            self.statusbar.showMessage("ER+! Json не прошел валидацию: " + str(e))
+            return False
+
+        return True
 
     # """"""""""""""""""
     # File-menu handlers
@@ -204,22 +252,21 @@ class Ui_MainWindow(object):
             self.label_current_file.setText(basename(filename))
 
     def save_file(self):
-        try:
-            json.loads(self.textEdit.toPlainText())
-        except ValueError as e:
-            self.statusbar.showMessage("ER+! Json не прошел валидацию: " + str(e))
-            return None
+        pass
 
-        filename, _ = QFileDialog.getSaveFileName(None, "Сохранить как", "", "JSON-файлы (*.json)")
+    def save_file_as(self):
+        if self.__validate_json__():
 
-        if filename != "":
-            data = self.textEdit.toPlainText()
+            filename, _ = QFileDialog.getSaveFileName(None, "Сохранить как", "", "JSON-файлы (*.json)")
 
-            with open(filename, "w", encoding='utf-8') as file:
-                file.write(data)
+            if filename != "":
+                data = self.textEdit.toPlainText()
 
-            self.statusbar.showMessage("Успешное сохранение файла: " + filename)
-            self.label_current_file.setText(basename(filename))
+                with open(filename, "w", encoding='utf-8') as file:
+                    file.write(data)
+
+                self.statusbar.showMessage("Успешное сохранение файла: " + filename)
+                self.label_current_file.setText(basename(filename))
 
     def close(self):
         if self.textEdit.isReadOnly():
@@ -258,48 +305,58 @@ class Ui_MainWindow(object):
             if self.textEdit.toPlainText() == "":
                 self.statusbar.showMessage("ER+! Окно данных пусто!")
             else:
-                self.statusbar.showMessage("Тестирование...")
-                if self.listWidget.currentRow() == -1:
-                    self.statusbar.showMessage("ER+! Не выбран тест из списка")
+                if self.__validate_json__():
+                    self.statusbar.showMessage("Тестирование...")
+                    if self.listWidget.currentRow() == -1:
+                        self.statusbar.showMessage("ER+! Не выбран тест из списка")
+                    else:
+                        test_name = self.listWidget.currentItem().text()
+                        data = {
+                            "name": test_name,
+                            "send": "on",
+                            "test_data": self.textEdit.toPlainText(),
+                            "python": "true"
+                        }
+
+                        result = "-------------------------------\n"
+                        result += "Создание соединения.\n"
+                        try:
+                            connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
+                            result += "Соединение создано успешно.\n"
+
+                            result += "Выполняется запрос к серверу. Ожидание ответа сервера.\n\n"
+                            request = connector.test_request(data)
+
+                            result += "Ответ сервера получен:\n"
+                            result += "Reason: \"" + request.get("Reason") + "\". Status: " + str(request.get("Status")) + "\n"
+                            result += "Data:\n" + request.get("Data")
+                        except Exception as e:
+                            result += "Произошла непредвиденная ошибка."
+
+                        self.text_console.appendPlainText(result)
+                        self.statusbar.showMessage("Подключение к серверу завершено!")
                 else:
-                    test_name = self.listWidget.currentItem().text()
-                    connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
-                    data = {
-                        "name": test_name,
-                        "send": "on",
-                        "python": "true"
-                    }
-
-                    request = connector.test_request(data)
-
-                    print("Test_name: " + test_name)
-                    print("Request result: " + request.get("Data"))
-                    self.statusbar.showMessage("Подключение к серверу завершено!")
+                    self.statusbar.showMessage("ER+! JSON не прошел валидацию...")
 
 
-# """""""""""""""""""""
+    # """""""""""""""""""""
     # Options-menu handlers
     # """""""""""""""""""""
     def settings(self):
         self.statusbar.showMessage('Вызвано диалоговое окно "Настройки"')
         settings_window = QDialog()
-        ui = settings.Ui_Dialog(config)
+        ui = settings.Ui_Dialog()
         ui.setupUi(settings_window)
 
         settings_window.setModal(True)
 
         if settings_window.exec_():
-            url = ui.line_URL.text()
-            sub_url = ui.line_subUrl.text()
+            with open("config.ini", "w") as cfg_file:
+                config.write(cfg_file)
 
-            if config["DEFAULT"]["url"] != url or config["DEFAULT"]["suburl"] != sub_url:
-                config["DEFAULT"]["url"] = url
-                config["DEFAULT"]["suburl"] = sub_url
+            self.__set_font__(config['FONT']['value'])
 
-                with open("config.ini", "w") as cfg_file:
-                    config.write(cfg_file)
-
-                self.statusbar.showMessage('Настройки обновлены')
+            self.statusbar.showMessage('Настройки обновлены')
         else:
             self.statusbar.showMessage('')
 
