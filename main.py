@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import sys
-from Connector import *
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from myGui.mainform import Ui_MainWindow
 
@@ -10,10 +9,10 @@ if __name__ == "__main__":
     subUrl = '/lib/test/'"""
     testName = "TextProcessorTest.php"
     
-    data = parse.urlencode({
+    """data = parse.urlencode({
         "name": testName,
         "send": "on",
-    })
+    })"""
     
     try:
         """conn = Connector(url, subUrl)
@@ -26,6 +25,7 @@ if __name__ == "__main__":
 
         ui = Ui_MainWindow()
         ui.setupUi(window)
+        ui.refresh_list()
         window.show()
 
         sys.exit(app.exec_())

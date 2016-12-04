@@ -11,7 +11,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def __init__(self, config):
-        # TODO: написать функцию подгрузки настроек из файла
         self.url = config["DEFAULT"]["url"]
         self.subUrl = config["DEFAULT"]["suburl"]
 

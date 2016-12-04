@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QFileDialog, QMessageBox, QDialog
 
 from myGui import config
 from myGui import about, settings
+from Connector import *
 
 
 class Ui_MainWindow(object):
@@ -206,7 +207,7 @@ class Ui_MainWindow(object):
         try:
             json.loads(self.textEdit.toPlainText())
         except ValueError as e:
-            self.statusbar.showMessage("Json не прошел валидацию: " + str(e))
+            self.statusbar.showMessage("ER+! Json не прошел валидацию: " + str(e))
             return None
 
         filename, _ = QFileDialog.getSaveFileName(None, "Сохранить как", "", "JSON-файлы (*.json)")
@@ -239,13 +240,44 @@ class Ui_MainWindow(object):
     # Actions-menu handlers
     # """""""""""""""""""""
     def refresh_list(self):
-        self.listWidget.addItem("qwerty")
+        connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
+        test_list = connector.get_test_list()
+        self.listWidget.clear()
+        print("\nCurrent test_list:")
+        print(test_list)
+
+        for test in test_list:
+            self.listWidget.addItem(test)
+
         self.statusbar.showMessage("Список доступных тестов был обновлен.")
 
     def test(self):
-        self.statusbar.showMessage("Тестирование...")
+        if self.label_current_file.text() == "":
+            self.statusbar.showMessage("ER+! Откройте файл, прежде чем тестировать")
+        else:
+            if self.textEdit.toPlainText() == "":
+                self.statusbar.showMessage("ER+! Окно данных пусто!")
+            else:
+                self.statusbar.showMessage("Тестирование...")
+                if self.listWidget.currentRow() == -1:
+                    self.statusbar.showMessage("ER+! Не выбран тест из списка")
+                else:
+                    test_name = self.listWidget.currentItem().text()
+                    connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
+                    data = {
+                        "name": test_name,
+                        "send": "on",
+                        "python": "true"
+                    }
 
-    # """""""""""""""""""""
+                    request = connector.test_request(data)
+
+                    print("Test_name: " + test_name)
+                    print("Request result: " + request.get("Data"))
+                    self.statusbar.showMessage("Подключение к серверу завершено!")
+
+
+# """""""""""""""""""""
     # Options-menu handlers
     # """""""""""""""""""""
     def settings(self):
