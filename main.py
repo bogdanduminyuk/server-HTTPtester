@@ -11,8 +11,11 @@ if __name__ == "__main__":
 
         ui = Ui_MainWindow()
         ui.setupUi(window)
-        ui.refresh_list()
         window.show()
+        try:
+            ui.refresh_list()
+        except Exception as e:
+            print(e)
 
         sys.exit(app.exec_())
 

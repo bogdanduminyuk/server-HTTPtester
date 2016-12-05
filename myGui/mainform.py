@@ -292,16 +292,20 @@ class Ui_MainWindow(object):
     # Actions-menu handlers
     # """""""""""""""""""""
     def refresh_list(self):
-        connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
-        test_list = connector.get_test_list()
-        self.listWidget.clear()
-        print("\nCurrent test_list:")
-        print(test_list)
+        try:
+            connector = Connector(config["DEFAULT"]["url"], '/' + config["DEFAULT"]["suburl"] + "/")
+            test_list = connector.get_test_list()
+            self.listWidget.clear()
+            print("\nCurrent test_list:")
+            print(test_list)
 
-        for test in test_list:
-            self.listWidget.addItem(test)
+            for test in test_list:
+                self.listWidget.addItem(test)
 
-        self.statusbar.showMessage("Список доступных тестов был обновлен.")
+            self.statusbar.showMessage("Список доступных тестов был обновлен.")
+        except Exception as e:
+            self.statusbar.showMessage(str(e))
+            QMessageBox.warning(None, "Ошибка", str(e), QMessageBox.Ok)
 
     def test(self):
         if self.label_current_file.text() == "":
@@ -338,12 +342,14 @@ class Ui_MainWindow(object):
                 result += "Ответ сервера получен:\n"
                 result += "Reason: \"" + request.get("Reason") + "\". Status: " + str(request.get("Status")) + "\n"
                 result += "Data:\n" + request.get("Data")
+                self.text_console.setPlainText(result)
 
             except Exception as e:
                 result += "Произошла непредвиденная ошибка."
-
                 self.text_console.appendPlainText(result)
-                self.statusbar.showMessage("Подключение к серверу завершено!")
+                QMessageBox.warning(None, "Ошибка", str(e), QMessageBox.Ok)
+
+            self.statusbar.showMessage("Подключение к серверу завершено!")
 
 
 
