@@ -388,4 +388,4 @@ class Ui_MainWindow(object):
         self.statusbar.showMessage('')
 
     def show_help(self):
-        webbrowser.open("http://localhost/view/pages/help_common.php")
+        webbrowser.open("http://" + config["DEFAULT"]["URL"] + "/view/pages/help_common.php")
